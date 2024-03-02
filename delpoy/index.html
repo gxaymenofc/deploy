@@ -1,1 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GURU-BOT</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #151515;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
 
+        .container {
+             background-color: #1E1E1E;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+              border-radius: 8px;
+    overflow: hidden;
+    width: 300px;
+    text-align: center;
+    color: #fff;
+    position: relative;
+
+    
+    animation: glow-border 2s infinite alternate;
+}
+
+@keyframes glow-border {
+    from {
+        border: 2px solid rgba(97, 218, 251, 1); /* Start color */
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+    to {
+        border: 2px solid rgba(97, 218, 251, 0.8); /* End color */
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+}
+
+
+        h1 {
+            background-color: #1E1E1E;
+            color: #61dafb;
+            margin: 0;
+            padding: 20px;
+            font-size: 24px;
+        }
+
+        label {
+            display: block;
+            margin: 20px 0 10px;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        input {
+            width: calc(100% - 40px);
+            padding: 10px;
+            margin: 0 20px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background-color: #2E2E2E;
+            color: #fff;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        button {
+            background-color: #61dafb;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            width: calc(100% - 40px);
+            margin: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #4fa3d1;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #333;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #555;
+            width: 80%;
+            border-radius: 8px;
+            color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .modal-btn {
+            margin: 10px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            background-color: #61dafb;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .modal-btn:hover {
+            background-color: #4fa3d1;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    function deploy() {
+        var username = document.getElementById('usernameInput').value;
+
+        if (username.trim() !== '') {
+            var apiUrl = `https://api.github.com/repos/${username}/HARDY-BOT`;
+
+            
+            fetch(apiUrl)
+                .then(response => {
+                    if (response.status === 200) {
+                        
+                        showModal(username);
+                    } else {
+                        
+                        window.location.href = 'https://github.com/tzaym1/HARDY-BOT/fork';
+                    }
+                })
+                .catch(error => {
+                    console.error("Error checking repository:", error);
+                });
+        } else {
+            alert("Please enter a valid GitHub username.");
+        }
+    }
+
+    function showModal(username) {
+        var modal = document.createElement('div');
+        modal.className = 'modal';
+        document.body.appendChild(modal);
+
+        var modalContent = document.createElement('div');
+        modalContent.className = 'modal-content';
+        modal.appendChild(modalContent);
+
+        var herokuBtn = document.createElement('button');
+        herokuBtn.innerHTML = 'Deploy to Heroku';
+        herokuBtn.className = 'modal-btn';
+        herokuBtn.onclick = function () {
+            window.location.href = `https://heroku.com/deploy/?template=https://github.com/${username}/HARDY-BOT`;
+            closeModal();
+        };
+        modalContent.appendChild(herokuBtn);
+
+        var koyebBtn = document.createElement('button');
+        koyebBtn.innerHTML = 'Deploy to Koyeb';
+        koyebBtn.className = 'modal-btn';
+        koyebBtn.onclick = function () {
+            window.location.href = `https://app.koyeb.com/apps/deploy?type=git&repository=github.com/${username}/HARDY-BOT&branch=main&name=gurubhay&builder=dockerfile&env[DATABASE_URL]=&env[SESSION_ID]=your+sessionid+here&env[PREFIX]=!&env[MODE]=public&env=[autoRead]=false&env[statusview]=false&env[REMOVEBG_KEY]=your+rmbg+key&env[antidelete]=false`;
+            closeModal();
+        };
+        modalContent.appendChild(koyebBtn);
+
+      
+        modal.style.display = 'block';
+
+       
+        function closeModal() {
+            modal.style.display = 'none';
+            document.body.removeChild(modal);
+        }
+    }
+</script>
+
+<div class="container">
+    <h1>Deploy Hardy Bot</h1>
+
+    <label for="usernameInput">Enter your GitHub username:</label>
+    <input type="text" id="usernameInput" placeholder="Enter username">
+
+    <button id="deployBtn" onclick="deploy()">Deploy</button>
+</div>
+
+</body>
+</html>
